@@ -6,7 +6,6 @@ requests
 logging
 time
 pymongo
-stripe
 datetime
 certifi
 random
@@ -15,6 +14,10 @@ asyncio
 aiohttp
 pytz
 psutil
+stripe
+requests
+flask
+# Add other dependencies as needed
 telebot==4.9.0
 requests==2.31.0
 pymongo==4.5.0
