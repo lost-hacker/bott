@@ -6,6 +6,7 @@ requests
 logging
 time
 pymongo
+stripe
 datetime
 certifi
 random
