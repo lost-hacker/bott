@@ -1,0 +1,35 @@
+name: Run YAML Script Every 10 Minutes
+
+on:
+  schedule:
+    # This cron expression will run the workflow every 10 minutes
+    - cron: '*/10 * * * *'  # At every 10 minutes
+  workflow_dispatch:  # Allows for manual triggering of the workflow
+
+jobs:
+  run-yaml:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'  # Specify the Python version you need
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml  # Install PyYAML if you're using it to process YAML files
+
+      - name: Run YAML script
+        run: |
+          # Replace with the command that processes your YAML file
+          # Example for a Python script that reads a YAML file
+          python -c "import yaml; yaml_file = 'maim.yml'; with open(yaml_file, 'r') as file: data = yaml.safe_load(file); print(data)"
+
+          # Or if you have a specific command that uses the YAML file
+          # command_that_processes_yaml your_file.yaml
+          
