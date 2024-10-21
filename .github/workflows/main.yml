@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths-ignore: 'README.md'
   schedule:
-    - cron: "0 */1 * * *"  # This runs the workflow every 60 minutes (hourly)
+    - cron: "*/5 * * * *"  # This runs the workflow every 60 minutes (hourly)
   workflow_dispatch:
 
 env:
