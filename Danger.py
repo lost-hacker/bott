@@ -15,7 +15,7 @@ import aiohttp
 from telebot import types
 import pytz
 import psutil
-import stripe
+
 loop = asyncio.get_event_loop()
 
 TOKEN = '7129958734:AAGiINMk2YZuA3_S5jB6ytrqEdqdsQaC_nM'
@@ -31,32 +31,6 @@ db = client['rishi']
 users_collection = db.users
 
 
-import stripe
-
-# Set your Stripe secret key
-stripe.api_key = "your_stripe_secret_key"
-
-def handle_payment(user_id, plan_id, amount, currency="usd"):
-    try:
-        # Create a new payment intent
-        payment_intent = stripe.PaymentIntent.create(
-            amount=int(amount * 100),  # Stripe accepts amounts in cents
-            currency=currency,
-            payment_method_types=["card"],
-            description=f"Payment for Plan {plan_id} by User {user_id}"
-        )
-        
-        # Mock: Assume payment is successful, handle post-payment actions
-        # In production, you should handle the webhook to confirm payment success
-        if payment_intent['status'] == 'succeeded':
-            approve_plan(user_id, plan_id)
-            return True
-        else:
-            print("Payment failed or pending.")
-            return False
-    except Exception as e:
-        print(f"Payment failed: {e}")
-        return False
 
 def approve_plan(user_id, plan_id):
     # Approve the user's subscription plan
