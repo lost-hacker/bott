@@ -28,7 +28,7 @@ jobs:
         run: |
           # Replace with the command that processes your YAML file
           # Example for a Python script that reads a YAML file
-          python -c "import yaml; yaml_file = 'maim.yml'; with open(yaml_file, 'r') as file: data = yaml.safe_load(file); print(data)"
+          python -c "import yaml; yaml_file = 'main.yml'; with open(yaml_file, 'r') as file: data = yaml.safe_load(file); print(data)"
 
           # Or if you have a specific command that uses the YAML file
           # command_that_processes_yaml your_file.yaml
