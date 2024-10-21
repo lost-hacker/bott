@@ -18,4 +18,14 @@ jobs:
     - name: Run a script to check pipeline status
       run: |
         echo "This workflow is defined in main.yml"
-        echo "The pipeline is alive!" # Script to check the health of the repo
+        echo "The pipeline is alive!"
+
+    - name: Run min.yml
+      run: |
+        echo "Running main.yml"
+        # Add the appropriate command to run main.yml based on your use case
+        # Example: if using Ansible, you might run:
+        ansible-playbook main.yml
+
+        # Or, if it's a shell script, you might use:
+        bash main.yml
