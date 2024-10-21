@@ -1,31 +1,33 @@
-name: Alive Workflow
+name: Run Danger Script 24/7
 
 on:
   push:
     branches:
       - main
-  schedule:
-    - cron: "*/10 * * * *" # This runs the workflow every 10 minutes
+  workflow_dispatch:  # Allows manual trigger from the Actions tab
 
 jobs:
-  alive-job:
+  run-script:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out code
-      uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-    - name: Run a script to check pipeline status
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'  # Set the appropriate Python version
+       
+- name: Permission give bgmi
+      run: | chmod +x bgmi
+
+    - name: Install Dependencies
       run: |
-        echo "This workflow is defined in main.yml"
-        echo "The pipeline is alive!"
+        python -m pip install --upgrade pip
+        pip install telebot pymongo certifi aiohttp pytz psutil
 
-    - name: Run min.yml
+    - name: Run Danger Script
       run: |
-        echo "Running main.yml"
-        # Add the appropriate command to run main.yml based on your use case
-        # Example: if using Ansible, you might run:
-        ansible-playbook main.yml
-
-        # Or, if it's a shell script, you might use:
-        bash main.yml
+        nohup python Danger.py &  # Run the script in the background
+        while true; do sleep 60; done  # Keep the GitHub action alive by sleeping in a loop
