@@ -426,25 +426,42 @@ def when_command(message):
                                    "*🔄 Feel free to initiate your attack whenever you're ready!*", 
                                    reply_markup=create_inline_keyboard(), parse_mode='Markdown')
 
+from telebot import types
+
+OWNER_ID = 1175384555  # Replace this with the actual Telegram user ID of the owner
+
 # Add this function to handle broadcasting messages
 def broadcast_message_to_users(message_text):
     users_cursor = users_collection.find()  # Get all users from the database
     for user in users_cursor:
         user_id = user.get("user_id")
         try:
-            bot.send_message(user_id, message_text)
+            bot.send_message(user_id, message_text, reply_markup=create_two_button_markup())
             logging.info(f"Message sent to user: {user_id}")
         except Exception as e:
             logging.error(f"Failed to send message to user {user_id}: {e}")
 
-# Add this handler to trigger the broadcast from an admin
+# Function to create two inline buttons
+def create_two_button_markup():
+    markup = types.InlineKeyboardMarkup()
+
+    # Define two buttons
+    button1 = types.InlineKeyboardButton("🔥 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 🔥", url="https://t.me/+p-27K6Lw2qE2MTM1")
+    button2 = types.InlineKeyboardButton("☣️ 𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗢𝘄𝗻𝗲𝗿 ☣️", url="https://t.me/Galaxy_Carder")
+
+    # Add buttons to the markup
+    markup.add(button1, button2)
+
+    return markup
+
+# Add this handler to trigger the broadcast from an admin or owner
 @bot.message_handler(commands=['broadcast'])
 def handle_broadcast_command(message):
     chat_id = message.chat.id
     user_id = message.from_user.id
-    
-    # Only allow admins to use the /broadcast command
-    if is_user_admin(user_id, chat_id):
+
+    # Allow only admins and the owner to use the /broadcast command
+    if is_user_admin(user_id, chat_id) or user_id == OWNER_ID:
         bot.send_message(chat_id, "Please enter the message to broadcast:")
         bot.register_next_step_handler(message, process_broadcast_message)
     else:
@@ -455,7 +472,8 @@ def process_broadcast_message(message):
     broadcast_message = message.text
     broadcast_message_to_users(broadcast_message)
     bot.send_message(message.chat.id, "📢 Broadcast message sent to all users.")
-    
+
+
 
 @bot.message_handler(commands=['myinfo'])
 def myinfo_command(message):
