@@ -19,8 +19,8 @@ jobs:
       with:
         python-version: '3.x'  # Set the appropriate Python version
        
-- name: Permission give bgmi
-      run: | chmod +x bgmi
+    -   name: Permission give bgmi
+        run: | chmod +x bgmi
 
     - name: Install Dependencies
       run: |
