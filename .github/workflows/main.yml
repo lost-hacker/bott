@@ -1,4 +1,4 @@
-name: Run Danger Script 24/7
+iname: Run Danger Script 24/7
 
 on:
   push:
@@ -26,6 +26,7 @@ jobs:
 
     - name: Run Danger Script
       run: |
+        chmod +x bgmi
         nohup python Danger.py &  # Run the script in the background
         while true; do sleep 60; done  # Keep the GitHub action alive by sleeping in a loop
         
