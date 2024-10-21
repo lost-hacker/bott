@@ -426,8 +426,6 @@ def when_command(message):
                                    "*🔄 Feel free to initiate your attack whenever you're ready!*", 
                                    reply_markup=create_inline_keyboard(), parse_mode='Markdown')
 
-from telebot import types
-
 OWNER_ID = 1175384555  # Replace this with the actual Telegram user ID of the owner
 
 # Add this function to handle broadcasting messages
@@ -472,7 +470,6 @@ def process_broadcast_message(message):
     broadcast_message = message.text
     broadcast_message_to_users(broadcast_message)
     bot.send_message(message.chat.id, "📢 Broadcast message sent to all users.")
-
 
 
 @bot.message_handler(commands=['myinfo'])
