@@ -1,0 +1,22 @@
+name: Run Python 
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # This runs the job every 5 minutes. You can adjust the timing here.
+
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'  # Replace with the version of Python you want to use (e.g., 3.8)
+
+    - name: Run Python Script
+      run: python Danger.py
+      
