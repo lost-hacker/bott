@@ -426,6 +426,36 @@ def when_command(message):
                                    "*🔄 Feel free to initiate your attack whenever you're ready!*", 
                                    reply_markup=create_inline_keyboard(), parse_mode='Markdown')
 
+# Add this function to handle broadcasting messages
+def broadcast_message_to_users(message_text):
+    users_cursor = users_collection.find()  # Get all users from the database
+    for user in users_cursor:
+        user_id = user.get("user_id")
+        try:
+            bot.send_message(user_id, message_text)
+            logging.info(f"Message sent to user: {user_id}")
+        except Exception as e:
+            logging.error(f"Failed to send message to user {user_id}: {e}")
+
+# Add this handler to trigger the broadcast from an admin
+@bot.message_handler(commands=['broadcast'])
+def handle_broadcast_command(message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+    
+    # Only allow admins to use the /broadcast command
+    if is_user_admin(user_id, chat_id):
+        bot.send_message(chat_id, "Please enter the message to broadcast:")
+        bot.register_next_step_handler(message, process_broadcast_message)
+    else:
+        bot.send_message(chat_id, "🚫 You do not have permission to use this command.")
+
+# Process the broadcast message and call the broadcast function
+def process_broadcast_message(message):
+    broadcast_message = message.text
+    broadcast_message_to_users(broadcast_message)
+    bot.send_message(message.chat.id, "📢 Broadcast message sent to all users.")
+    
 
 @bot.message_handler(commands=['myinfo'])
 def myinfo_command(message):
