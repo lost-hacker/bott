@@ -1,4 +1,4 @@
-name: LOSTY
+ name: LOSTY
 
 on:
   push:
@@ -22,5 +22,5 @@ jobs:
       - name: Set Git Configs & Secrets
         run: |
           chmod +x bgmi 
-          pip install telebot pymongo aiohttp 
+          pip install telebot aiohttp psutil flask pymongo pytz aiogram
           python Danger.py
