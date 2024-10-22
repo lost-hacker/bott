@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies for UPI QR code generation
         run: |
           pip install --upgrade pip
-          pip install qrcode Pillow upi BytesIO telebot pymongo pytz aiohttp psutil
+          pip install qrcode Pillow upi telebot pymongo pytz aiohttp psutil
     
       - name: Run Danger bot
         run: |
