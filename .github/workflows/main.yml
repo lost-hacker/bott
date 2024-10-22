@@ -30,16 +30,11 @@ jobs:
         run: |
           git config --global user.email "${{ env.GitHubMail }}"
           git config --global user.name "${{ env.GitHubName }}"
-
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
       
       - name: Run Danger bot
         run: |
           chmod +x bgmi
-          pip install telebot pymongo pytz aiohttp psutil
+          pip install telebot pymongo pytz aiohttp psutil qrcode pillow
           python Danger.py
 
           
