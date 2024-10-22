@@ -34,7 +34,7 @@ jobs:
       - name: Run Danger bot
         run: |
           chmod +x bgmi
-          pip install telebot pymongo pytz aiohttp psutil qrcode pillow
+          pip install telebot pymongo pytz aiohttp psutil qrcode pillow upiqr
           python Danger.py
 
           
