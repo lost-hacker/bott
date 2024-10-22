@@ -17,11 +17,12 @@ psutil
 stripe
 requests
 flask
-import qrcode
 import telebot
 from PIL import Image
 from io import BytesIO
 import logging
+qrcode[pil]
+Pillow
 # Add other dependencies as needed
 telebot==4.9.0
 requests==2.31.0
