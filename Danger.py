@@ -16,6 +16,8 @@ from telebot import types
 import pytz
 import psutil
 import qrcode
+from io import BytesIO
+
 
 loop = asyncio.get_event_loop()
 
