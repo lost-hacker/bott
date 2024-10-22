@@ -554,12 +554,7 @@ def handle_generate_qr_command(message):
         button = telebot.types.InlineKeyboardButton(f"Pay ₹{amount}", callback_data=f"pay_{amount}")
         markup.add(button)
 
-    bot.send_message(chat_id, "Select The Pack You want To buy 
-    Prices List💸 :
-Day-->150 Rs.
-Week-->400 Rs.
-Month-->1000 Rs.
-2 Month-->1800 Rs.", reply_markup=markup)
+    bot.send_message(chat_id, "Select The Pack You want To buy Prices List💸 Day-->150 Rs.Week-->400 Rs.Month-->1000 Rs.2 Month-->1800 Rs. ", reply_markup=markup)
 
 # Handle the button clicks
 @bot.callback_query_handler(func=lambda call: call.data.startswith("pay_"))
