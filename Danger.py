@@ -434,39 +434,27 @@ def when_command(message):
                                    "*🔄 Feel free to initiate your attack whenever you're ready!*", 
                                    reply_markup=create_inline_keyboard(), parse_mode='Markdown')
 
-OWNER_ID = 1175384555  # Replace this with the actual Telegram user ID of the owner
+from pymongo import MongoClient
+import logging
+from telebot import types
 
-# Add this function to handle broadcasting messages
-def broadcast_message_to_users(message_text):
-    users_cursor = users_collection.find()  # Get all users from the database
-    for user in users_cursor:
-        user_id = user.get("user_id")
-        try:
-            bot.send_message(user_id, message_text, reply_markup=create_two_button_markup())
-            logging.info(f"Message sent to user: {user_id}")
-        except Exception as e:
-            logging.error(f"Failed to send message to user {user_id}: {e}")
+# MongoDB setup
+MONGO_URI = 'mongodb+srv://rishi:ipxkingyt@rishiv.ncljp.mongodb.net/?retryWrites=true&w=majority&appName=rishiv'  # Update with your Mongo URI
+client = MongoClient(MONGO_URI)
+db = client['rishi']  # Replace with your database name
+users_collection = db['users']  # Replace with your users collection
 
-# Function to create two inline buttons
-def create_two_button_markup():
-    markup = types.InlineKeyboardMarkup()
+# Constants
+OWNER_ID = 1175384555  # Replace with the owner's actual Telegram ID
+CHANNEL_ID = -1002012359438  # Replace with the actual channel ID
 
-    # Define two buttons
-    button1 = types.InlineKeyboardButton("🔥 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 🔥", url="https://t.me/+p-27K6Lw2qE2MTM1")
-    button2 = types.InlineKeyboardButton("☣️ 𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗢𝘄𝗻𝗲𝗿 ☣️", url="https://t.me/Galaxy_Carder")
-
-    # Add buttons to the markup
-    markup.add(button1, button2)
-
-    return markup
-
-# Add this handler to trigger the broadcast from an admin or owner
+# Function to handle broadcast command
 @bot.message_handler(commands=['broadcast'])
 def handle_broadcast_command(message):
     chat_id = message.chat.id
     user_id = message.from_user.id
 
-    # Allow only admins and the owner to use the /broadcast command
+    # Only allow admins and the owner to use the /broadcast command
     if is_user_admin(user_id, chat_id) or user_id == OWNER_ID:
         bot.send_message(chat_id, "Please enter the message to broadcast:")
         bot.register_next_step_handler(message, process_broadcast_message)
@@ -478,6 +466,45 @@ def process_broadcast_message(message):
     broadcast_message = message.text
     broadcast_message_to_users(broadcast_message)
     bot.send_message(message.chat.id, "📢 Broadcast message sent to all users.")
+
+# Function to send broadcast message to all users
+def broadcast_message_to_users(message_text):
+    users_cursor = users_collection.find()  # Fetch all users from the MongoDB collection
+
+    with open("Log.txt", "a") as log_file:  # Open the Log.txt file to log the broadcast
+        for user in users_cursor:
+            user_id = user.get("user_id")
+            try:
+                # Send the broadcast message to the user
+                bot.send_message(user_id, message_text, reply_markup=create_two_button_markup())
+                logging.info(f"Message sent to user: {user_id}")
+                
+                # Log the user ID in Log.txt
+                log_file.write(f"Broadcast sent to user ID: {user_id}\n")
+                
+            except Exception as e:
+                logging.error(f"Failed to send message to user {user_id}: {e}")
+
+# Function to create inline buttons
+def create_two_button_markup():
+    markup = types.InlineKeyboardMarkup()
+
+    # Define two buttons
+    button1 = types.InlineKeyboardButton("🔥 Join Our Channel 🔥", url="https://t.me/+p-27K6Lw2qE2MTM1")
+    button2 = types.InlineKeyboardButton("☣️ Contact Owner ☣️", url="https://t.me/Galaxy_Carder")
+
+    # Add buttons to the markup
+    markup.add(button1, button2)
+
+    return markup
+
+# Helper function to check if a user is an admin
+def is_user_admin(user_id, chat_id):
+    try:
+        # Check if the user is an admin in the chat
+        return bot.get_chat_member(chat_id, user_id).status in ['administrator', 'creator']
+    except:
+        return False
 
 
 @bot.message_handler(commands=['myinfo'])
