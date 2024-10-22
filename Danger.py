@@ -16,10 +16,6 @@ import aiohttp
 from telebot import types
 import pytz
 import psutil
-import qrcode
-from pillow import Image
-from io import BytesIO
-import logging
 
 loop = asyncio.get_event_loop()
 
@@ -509,7 +505,12 @@ def is_user_admin(user_id, chat_id):
         return bot.get_chat_member(chat_id, user_id).status in ['administrator', 'creator']
     except:
         return False
-
+import qrcode
+import telebot
+from PIL import Image
+from io import BytesIO
+import logging
+                                   
 # Define the UPI ID and payee details
 UPI_ID = "9536476115@paytm"  # Replace with your UPI ID
 PAYEE_NAME = "Losty"  # Replace with the payee's name
