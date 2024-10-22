@@ -17,7 +17,6 @@ psutil
 stripe
 requests
 flask
-from io import BytesIO
 import logging
 qrcode[pil]
 Pillow
