@@ -1,4 +1,3 @@
-#CHIRAGNYOUTUBET
 import os
 import signal
 import telebot
@@ -16,6 +15,8 @@ import aiohttp
 from telebot import types
 import pytz
 import psutil
+import upiqr
+import qrcode
 
 loop = asyncio.get_event_loop()
 
