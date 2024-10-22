@@ -31,7 +31,15 @@ client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
 db = client['rishi']
 users_collection = db.users
 
+def kill_old_sessions():
+    current_pid = os.getpid()  # Get the current process ID
+    for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+        if proc.info['cmdline'] and 'Danger.py' in proc.info['cmdline'] and proc.info['pid'] != current_pid:
+            print(f"Killing old process: {proc.info['pid']}")
+            proc.kill()
 
+# Call the function at the start of the script
+kill_old_sessions()
 
 def approve_plan(user_id, plan_id):
     # Approve the user's subscription plan
