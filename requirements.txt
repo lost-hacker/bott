@@ -1,4 +1,4 @@
-os
+
 signal
 telebot
 json
