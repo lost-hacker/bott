@@ -26,10 +26,20 @@ jobs:
           # Killing old Python processes that might be running Danger.py
           pkill -f Danger.py || echo "No old sessions to kill"
 
-      
       - name: Set Git Configs & Secrets
         run: |
-          chmod +x bgmi 
+          git config --global user.email "${{ env.GitHubMail }}"
+          git config --global user.name "${{ env.GitHubName }}"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run Danger bot
+        run: |
+          chmod +x bgmi
           pip install telebot pymongo pytz aiohttp psutil
           python Danger.py
+
           
