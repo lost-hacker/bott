@@ -505,11 +505,6 @@ def is_user_admin(user_id, chat_id):
         return bot.get_chat_member(chat_id, user_id).status in ['administrator', 'creator']
     except:
         return False
-import qrcode
-import telebot
-from PIL import Image
-from io import BytesIO
-import logging
                                    
 # Define the UPI ID and payee details
 UPI_ID = "9536476115@paytm"  # Replace with your UPI ID
