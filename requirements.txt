@@ -17,7 +17,6 @@ psutil
 stripe
 requests
 flask
-import telebot
 from PIL import Image
 from io import BytesIO
 import logging
