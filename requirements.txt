@@ -17,7 +17,6 @@ psutil
 stripe
 requests
 flask
-import logging
 qrcode[pil]
 Pillow
 # Add other dependencies as needed
