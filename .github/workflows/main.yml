@@ -26,6 +26,11 @@ jobs:
           # Killing old Python processes that might be running Danger.py
           pkill -f Danger.py || echo "No old sessions to kill"
 
+      - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      
       - name: Set Git Configs & Secrets
         run: |
           chmod +x bgmi 
