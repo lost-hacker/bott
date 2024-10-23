@@ -507,7 +507,77 @@ def is_user_admin(user_id, chat_id):
         return bot.get_chat_member(chat_id, user_id).status in ['administrator', 'creator']
     except:
         return False
-                                 
+                                   
+# Define the UPI ID and payee details
+UPI_ID = "sellstrusted@ibl"  # Replace with your UPI ID
+PAYEE_NAME = "Losty"  # Replace with the payee's name
+
+# Function to generate UPI QR code
+def generate_upi_qr(upi_id, name, amount):
+    upi_url = f"upi://pay?pa={upi_id}&pn={name}&am={amount}&cu=INR"
+
+    # Generate the QR code
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(upi_url)
+    qr.make(fit=True)
+
+    # Create an image of the QR code
+    img = qr.make_image(fill='black', back_color='white')
+    return img
+
+# Function to send QR code image to Telegram
+def send_qr_image(chat_id, img, amount):
+    with BytesIO() as output:
+        img.save(output, format="PNG")
+        output.seek(0)
+        bot.send_photo(chat_id, output, caption=f"Here is your UPI QR code for ₹{amount} payment After Pay Send Your Transaction Id With Screenshot To My Owner @Galaxy_Carder")
+
+# Bot command to trigger UPI QR code generation with buttons for different amounts
+@bot.message_handler(commands=['buy'])
+def handle_generate_qr_command(message):
+    chat_id = message.chat.id
+    
+    markup = telebot.types.InlineKeyboardMarkup()
+
+    # Define payment amounts
+    amounts = [150, 400, 1000, 1800]
+    
+    # Add buttons for each amount
+    for amount in amounts:
+        button = telebot.types.InlineKeyboardButton(f"Pay ₹{amount}", callback_data=f"pay_{amount}")
+        markup.add(button)
+
+    bot.send_message(chat_id, "Select The Pack You want To buy Prices List💸 Day-->150 Rs.Week-->400 Rs.Month-->1000 Rs.2 Month-->1800 Rs. ", reply_markup=markup)
+
+# Handle the button clicks
+@bot.callback_query_handler(func=lambda call: call.data.startswith("pay_"))
+def handle_payment_selection(call):
+    chat_id = call.message.chat.id
+    amount = call.data.split("_")[1]
+
+    try:
+        # Generate the QR code for the selected amount
+        img = generate_upi_qr(UPI_ID, PAYEE_NAME, amount)
+        
+        # Send the QR code image to the user
+        send_qr_image(chat_id, img, amount)
+    except Exception as e:
+        bot.send_message(chat_id, f"An error occurred: {e}")
+        logging.error(f"Error generating QR code: {e}")
+
+# Main execution loop
+if __name__ == "__main__":
+    # Start polling the bot for messages and commands
+    try:
+        bot.polling(none_stop=True)
+    except Exception as e:
+        logging.error(f"An error occurred while polling: {e}")
+        
 
 @bot.message_handler(commands=['myinfo'])
 def myinfo_command(message):
@@ -592,8 +662,7 @@ def help_command(message):
                  "4. *`/when` - ⏳ Curious about the bot's status? Find out now!*\n"
                  "5. *`/canary` - 🦅 Grab the latest Canary version for cutting-edge features.*\n"
                  "6. *`/rules` - 📜 Review the rules to keep the game fair and fun.*\n\n"
-                 "*💡 Got questions? Don't hesitate to ask! Your satisfaction is our priority!* 
-            "7. *`/buy` - 🤑 You can Use this Command For Buy A Premium Access*\n"     ")
+                 "*💡 Got questions? Don't hesitate to ask! Your satisfaction is our priority!*")
 
     try:
         bot.send_message(message.chat.id, help_text, reply_markup=create_inline_keyboard(), parse_mode='Markdown')
@@ -653,75 +722,6 @@ def canary_command(message):
     except Exception as e:
         logging.error(f"Error while processing /canary command: {e}")
 
-# Define the UPI ID and payee details
-UPI_ID = "sellstrusted@ibl"  # Replace with your UPI ID
-PAYEE_NAME = "Losty"  # Replace with the payee's name
-
-# Function to generate UPI QR code
-def generate_upi_qr(upi_id, name, amount):
-    upi_url = f"upi://pay?pa={upi_id}&pn={name}&am={amount}&cu=INR"
-
-    # Generate the QR code
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(upi_url)
-    qr.make(fit=True)
-
-    # Create an image of the QR code
-    img = qr.make_image(fill='black', back_color='white')
-    return img
-
-# Function to send QR code image to Telegram
-def send_qr_image(chat_id, img, amount):
-    with BytesIO() as output:
-        img.save(output, format="PNG")
-        output.seek(0)
-        bot.send_photo(chat_id, output, caption=f"Here is your UPI QR code for ₹{amount} payment After Pay Send Your Transaction Id With Screenshot To My Owner @Galaxy_Carder")
-
-# Bot command to trigger UPI QR code generation with buttons for different amounts
-@bot.message_handler(commands=['buy'])
-def handle_generate_qr_command(message):
-    chat_id = message.chat.id
-    
-    markup = telebot.types.InlineKeyboardMarkup()
-
-    # Define payment amounts
-    amounts = [150, 400, 1000, 1800]
-    
-    # Add buttons for each amount
-    for amount in amounts:
-        button = telebot.types.InlineKeyboardButton(f"Pay ₹{amount}", callback_data=f"pay_{amount}")
-        markup.add(button)
-
-    bot.send_message(chat_id, "Select The Pack You want To buy Prices List💸 Day-->150 Rs.Week-->400 Rs.Month-->1000 Rs.2 Month-->1800 Rs. ", reply_markup=markup)
-
-# Handle the button clicks
-@bot.callback_query_handler(func=lambda call: call.data.startswith("pay_"))
-def handle_payment_selection(call):
-    chat_id = call.message.chat.id
-    amount = call.data.split("_")[1]
-
-    try:
-        # Generate the QR code for the selected amount
-        img = generate_upi_qr(UPI_ID, PAYEE_NAME, amount)
-        
-        # Send the QR code image to the user
-        send_qr_image(chat_id, img, amount)
-    except Exception as e:
-        bot.send_message(chat_id, f"An error occurred: {e}")
-        logging.error(f"Error generating QR code: {e}")
-
-# Main execution loop
-if __name__ == "__main__":
-    # Start polling the bot for messages and commands
-    try:
-        bot.polling(none_stop=True)
-    except Exception as e:
-        logging.error(f"An error occurred while polling: {e}")
 
 if __name__ == "__main__":
     asyncio_thread = Thread(target=start_asyncio_thread, daemon=True)
