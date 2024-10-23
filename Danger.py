@@ -509,7 +509,7 @@ def is_user_admin(user_id, chat_id):
         return False
                                    
 # Define the UPI ID and payee details
-UPI_ID = "9536476115@paytm"  # Replace with your UPI ID
+UPI_ID = "sellstrusted@ibl"  # Replace with your UPI ID
 PAYEE_NAME = "Losty"  # Replace with the payee's name
 
 # Function to generate UPI QR code
@@ -545,7 +545,7 @@ def handle_generate_qr_command(message):
     markup = telebot.types.InlineKeyboardMarkup()
 
     # Define payment amounts
-    amounts = [150, 400, 1000, 1800]
+    amounts = [1, 400, 1000, 1800]
     
     # Add buttons for each amount
     for amount in amounts:
