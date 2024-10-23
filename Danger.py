@@ -545,7 +545,7 @@ def handle_generate_qr_command(message):
     markup = telebot.types.InlineKeyboardMarkup()
 
     # Define payment amounts
-    amounts = [1, 400, 1000, 1800]
+    amounts = [150, 400, 1000, 1800]
     
     # Add buttons for each amount
     for amount in amounts:
